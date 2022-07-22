@@ -226,7 +226,7 @@ jobs:
             cat ~/project/.circleci/ansible/inventory.txt
             export ANSIBLE_HOST_KEY_CHECKING=False
             ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml    
-       - destroy-environment:
+      - destroy-environment:
            workflow_id: '${CIRCLE_WORKFLOW_ID:0:7}'  
 
 
@@ -262,9 +262,9 @@ jobs:
                 -H "X-Api-Key: ${THISDB_API_KEY}" \
                 -d "0"
             fi
-       - destroy-environment:
+      - destroy-environment:
            workflow_id: '${CIRCLE_WORKFLOW_ID:0:7}'
-       - destroy-environment:
+      - destroy-environment:
            workflow_id: '${CIRCLE_WORKFLOW_ID:0:7}'
 
   deploy-frontend:
@@ -290,12 +290,12 @@ jobs:
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
-       - destroy-environment:
+      - destroy-environment:
            workflow_id: '${CIRCLE_WORKFLOW_ID:0:7}'
-       - revert-migrations:
+      - revert-migrations:
            workflow_id: '${CIRCLE_WORKFLOW_ID:0:7}'
   #     # Here's where you will add some code to rollback on failure
-       - destroy-environment:
+      - destroy-environment:
            workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 #       # Here's where you will add some code to rollback on failure      
 
@@ -382,9 +382,9 @@ jobs:
             else
               exit 1
             fi           
-       - destroy-environment:
+      - destroy-environment:
            workflow_id: '${CIRCLE_WORKFLOW_ID:0:7}'
-       - revert-migrations:
+      - revert-migrations:
            workflow_id: '${CIRCLE_WORKFLOW_ID:0:7}' 
  
   cloudfront-update:
@@ -411,9 +411,9 @@ jobs:
             --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
             --tags project=udapeople
 
-       - destroy-environment:
+      - destroy-environment:
            workflow_id: '${CIRCLE_WORKFLOW_ID:0:7}'
-       - revert-migrations:
+      - revert-migrations:
            workflow_id: '${CIRCLE_WORKFLOW_ID:0:7}'
 
   cleanup:
@@ -466,7 +466,7 @@ workflows:
       
        - cloudfront-update:
            requires: [smoke-test-backend,smoke-test-frontend]
-       - cleanup
+       - cleanup:
            requires: [smoke-test-backend,smoke-test-frontend]
        - cleanup:
            requires: [cloudfront-update]
